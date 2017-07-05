@@ -5,10 +5,11 @@ import java.math.RoundingMode;
 
 abstract class CreditCard implements InterestBearer {
 	protected long cardId;
+	protected CreditCardType cardType;
 	protected BigDecimal interestRate;
 	protected BigDecimal balancePastDue;
 	
-	protected CreditCard(long cardId, BigDecimal interestRate) {
+	protected CreditCard(long cardId, CreditCardType cardType, BigDecimal interestRate) {
 		this.cardId = cardId;
 		this.interestRate = interestRate;
 		this.balancePastDue = BigDecimal.ZERO;
@@ -18,7 +19,11 @@ abstract class CreditCard implements InterestBearer {
 		return this.cardId;
 	}
 	
-	protected BigDecimal getInterestRate() {
+	public CreditCardType getCardType() {
+		return this.cardType;
+	}
+
+	public BigDecimal getInterestRate() {
 		return interestRate;
 	}
 

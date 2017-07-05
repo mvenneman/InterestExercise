@@ -6,6 +6,12 @@ import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 
 public class InterestExerciseTest {
+	//Hard-coded interest rates for testing
+	//Might pull current interest rates from database via service in production system
+	private static final BigDecimal VISA_INTRST_RT = new BigDecimal(0.10);
+	private static final BigDecimal MC_INTRST_RT = new BigDecimal(0.05);
+	private static final BigDecimal DISC_INTRST_RT = new BigDecimal(0.01);
+
 	@Test
 	/**
 	 * 1 person has 1 wallet and 3 cards (1 Visa, 1 MC, 1 Discover)
@@ -22,13 +28,13 @@ public class InterestExerciseTest {
 		
 		Wallet wallet = new Wallet(1L);
 
-		CreditCard visa = new VisaCreditCard(1L);
+		CreditCard visa = new CreditCardImpl(1L, CreditCardType.VISA, VISA_INTRST_RT);
 		visa.setBalancePastDue(new BigDecimal(100));
 		
-		CreditCard mastercard = new MasterCardCreditCard(2L);
+		CreditCard mastercard = new CreditCardImpl(2L, CreditCardType.MASTERCARD, MC_INTRST_RT);
 		mastercard.setBalancePastDue(new BigDecimal(100));
 		
-		CreditCard discover = new DiscoverCreditCard(3L);
+		CreditCard discover = new CreditCardImpl(3L, CreditCardType.DISCOVER, DISC_INTRST_RT);
 		discover.setBalancePastDue(new BigDecimal(100));
 		
 		wallet.addCreditCard(visa);
@@ -71,10 +77,10 @@ public class InterestExerciseTest {
 		Wallet wallet1 = new Wallet(1L);
 		Wallet wallet2 = new Wallet(2L);
 
-		CreditCard visa = new VisaCreditCard(1L);
+		CreditCard visa = new CreditCardImpl(1L, CreditCardType.VISA, VISA_INTRST_RT);
 		visa.setBalancePastDue(new BigDecimal(100));
 		
-		CreditCard discover = new DiscoverCreditCard(2L);
+		CreditCard discover = new CreditCardImpl(2L, CreditCardType.DISCOVER, DISC_INTRST_RT);
 		discover.setBalancePastDue(new BigDecimal(100));
 		
 		wallet1.addCreditCard(visa);
@@ -82,7 +88,7 @@ public class InterestExerciseTest {
 		
 		person.addWallet(wallet1);
 
-		CreditCard mastercard = new MasterCardCreditCard(3L);
+		CreditCard mastercard = new CreditCardImpl(3L, CreditCardType.MASTERCARD, MC_INTRST_RT);
 		mastercard.setBalancePastDue(new BigDecimal(100));
 		
 		wallet2.addCreditCard(mastercard);
@@ -121,13 +127,13 @@ public class InterestExerciseTest {
 		Wallet wallet1 = new Wallet(1L);
 		Wallet wallet2 = new Wallet(2L);
 
-		CreditCard mastercard1 = new MasterCardCreditCard(1L);
+		CreditCard mastercard1 = new CreditCardImpl(1L, CreditCardType.MASTERCARD, MC_INTRST_RT);
 		mastercard1.setBalancePastDue(new BigDecimal(100));
 		
-		CreditCard visa1 = new VisaCreditCard(2L);
+		CreditCard visa1 = new CreditCardImpl(2L, CreditCardType.VISA, VISA_INTRST_RT);
 		visa1.setBalancePastDue(new BigDecimal(100));
 		
-		CreditCard discover = new DiscoverCreditCard(3L);
+		CreditCard discover = new CreditCardImpl(3L, CreditCardType.DISCOVER, DISC_INTRST_RT);
 		discover.setBalancePastDue(new BigDecimal(100));
 		
 		wallet1.addCreditCard(mastercard1);
@@ -136,10 +142,10 @@ public class InterestExerciseTest {
 		
 		person1.addWallet(wallet1);
 
-		CreditCard visa2 = new VisaCreditCard(4L);
+		CreditCard visa2 = new CreditCardImpl(4L, CreditCardType.VISA, VISA_INTRST_RT);
 		visa2.setBalancePastDue(new BigDecimal(100));
 		
-		CreditCard mastercard2 = new MasterCardCreditCard(5L);
+		CreditCard mastercard2 = new CreditCardImpl(5L, CreditCardType.MASTERCARD, MC_INTRST_RT);
 		mastercard2.setBalancePastDue(new BigDecimal(100));
 		
 		wallet2.addCreditCard(visa2);
@@ -153,7 +159,6 @@ public class InterestExerciseTest {
 
 		//Wallet 2 (ID# 2) should have an interest of $15
 		wallet = person2.wallets.stream().filter(w->w.getWalletId() == 2L).findFirst().get();
-		System.out.println("Wallet 2 interest: " + wallet.calculateCurrentInterestOwed());
 		assertEquals(0, new BigDecimal(15.00).compareTo(wallet.calculateCurrentInterestOwed()));
 
 		//Person 1 should have an interest of $16
